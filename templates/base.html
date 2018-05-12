@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza My Mind</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/base.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'master/images/pmm_pizza.png' %}">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="site" style="background-color: black; color: white; margin: 0;">
+<nav class="navbar navbar-expand-lg mynav navbar-dark">
+    <a class="navbar-brand brand" href="{% url 'thursdays:homepage' %}">
+        <img src="{% static 'master/images/pmm_pizza.png' %}" width="30" height="30" alt=""
+             class="d-inline-block align-top">
+        Pizza My Mind
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav navbar-right ml-auto">
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <li class="nav-item"><a href="{% url 'thursdays:create_thursdays' %}" class="nav-link">Create Pizza
+                        My Mind Dates</a></li>
+                {% endif %}
+            {% endif %}
+            {% block navbar_links %}{% endblock %}
+            <li class="nav-item"><a href="{% url 'thursdays:about' %}" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="{% url 'thursdays:contact_us' %}" class="nav-link">Contact Us</a></li>
+        </ul>
+    </div>
+</nav>
+<section>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+</section>
+<div id="bg"></div>
+
+<div class="push"></div>
+<footer class="footer">
+
+    <div style="margin: 0px;">
+        <p class="footer-p">Pizza My Mind is hosted by the Physics, Computer Science, and Engineering Department at
+            CNU.</p>
+        <p class="footer-p">
+            Website developed by
+            <a href="https://github.com/Suttonium" target="_blank"> Austin Sutton </a>
+            and
+            <a href="https://github.com/topher235" target="_blank"> Chris Hurt </a>
+        </p>
+        <!--
+        <div id="github_image" style="background-color: white; width: 30px; height: 30px; border-radius: 50%">
+            <img
+                src="{% static 'master/images/github-512.png' %}"
+                width="30" height="30"
+                alt="">
+        </div>
+        -->
+    </div>
+</footer>
+
+<script
+        src="http://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/mikeflynn/egg.js/master/egg.min.js"></script>
+<script src="{% static 'master/js/particles.js' %}"></script>
+<script src="{% static 'master/js/base.js' %}"></script>
+<script src="{% static 'master/js/egg.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

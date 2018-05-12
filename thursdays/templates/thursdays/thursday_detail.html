@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="date">{{ thursday.date }}</h1>
+                <h3 class="name">{{ thursday.assigned_company.name }}</h3>
+            </div>
+            {#            <div class="col-sm-6">#}
+            {#                <img class="img-fluid" src="{% static '{{thursday.assigned_company.logo}}' %}"/>#}
+            {#            </div>#}
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="header">Contact information:</h5>
+                                <p class="text">Email: {{ thursday.assigned_company.email_one }}</p>
+                                {% if thursday.assigned_company.email_two %}
+                                    <p> Email Two: {{ thursday.assigned_company.email_two }} </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="header">Social:</h5>
+                                <p class="text">
+                                    Facebook: <a href="{{ thursday.assigned_company.facebook }}"
+                                                 target="_blank">{{ thursday.assigned_company.facebook }}</a>
+                                </p>
+                                <p class="text">
+                                    Website: <a href="{{ thursday.assigned_company.website }}"
+                                                target="_blank">{{ thursday.assigned_company.website }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div> <!-- end card content -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-content">
+                        <h5 class="header">Description:</h5>
+                        <p class="text">{{ thursday.assigned_company.description }}</p>
+                        <br>
+{#                        <a href="{{ thursday.assigned_company.powerpoint }}" target="_blank">PowerPoint Presentation</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if user.is_superuser %}
+            <button class="btn btn-primary update-button" onclick="goToUpdate()">UPDATE</button>
+        {% endif %}
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function goToUpdate() {
+            window.location = "{% url 'thursdays:thursday-update' thursday.pk %}";
+        }
+    </script>
+{% endblock %}

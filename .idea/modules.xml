@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../.idea/Programming_Python.iml" filepath="$PROJECT_DIR$/../../.idea/Programming_Python.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../ivWatch/.idea/ivWatch.iml" filepath="$PROJECT_DIR$/../../ivWatch/.idea/ivWatch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/master.iml" filepath="$PROJECT_DIR$/.idea/master.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_form.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Update</h1>
+        <br>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputName">Company Name<span class="required">*</span></label>
+                    {{ thursday_form.name }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputDate">Select Date<span class="required">*</span></label>
+                    {{ thursday_form.pmm_date }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmailOne">Email One<span class="required">*</span></label>
+                    {{ thursday_form.email_one }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmailTwo">Email Two</label>
+                    {{ thursday_form.email_two }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputWebsite">Website</label>
+                    {{ thursday_form.website }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputFacebook">Facebook</label>
+                    {{ thursday_form.facebook }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputDescription">Description<span class="required">*</span></label>
+                    {{ thursday_form.description }}
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Edit</button>
+        </form>
+    </div>
+{% endblock %}

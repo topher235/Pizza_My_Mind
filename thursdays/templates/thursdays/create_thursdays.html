@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_list.css' %}">
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.0.10/css/all.css"
+            integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+            crossorigin="anonymous">
+
+    <style>
+        .date-input {
+            margin-bottom: 10px;
+        }
+
+        .submit-button {
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            {% if message_success %}
+                <div class="alert alert-success">
+                    {{ message_success }}
+                </div>
+            {% endif %}
+            {% if message_error %}
+                <div class="alert alert-danger">
+                    {{ message_error }}
+                </div>
+            {% endif %}
+
+            <p>Enter dates to create them in the database. Use the Plus button to add another text field
+                and use the Minus button to remove the last text field. Dates should be in the form
+                'yyyy-mm-dd'</p>
+
+            <form id="form-js" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">{{ form.date }}</div>
+                <div id="extra-days-js"></div>
+                <button class="btn btn-primary submit-button" type="submit">Create dates</button>
+            </form>
+            <button id="add-field-js" class="btn btn-primary" onclick="addInput()"><i class="fas fa-plus"></i></button>
+            <button id="sub-field-js" class="btn btn-primary" onclick="subInput()"><i class="fas fa-minus"></i></button>
+            <br>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'master/js/create_thursdays.js' %}"></script>
+{% endblock %}

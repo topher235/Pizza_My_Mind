@@ -1,0 +1,66 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    background: #c1bdba;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+nav {
+    position: absolute;
+    top: 0;
+    background: rgb(19, 35, 47);
+}
+
+.brand {
+    color: white;
+}
+
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    background-color: #112128;
+}
+
+section {
+    flex: 1;
+    background: rgba(19, 35, 47, .9);
+    padding: 40px 40px 50px;
+    max-width: 600px;
+    margin: 40px auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px 4px rgba(19, 35, 47, .3);
+    text-align: center;
+}
+
+.footer {
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(19, 35, 47, .9);
+}
+
+.footer-p {
+    margin: 0;
+}
+
+.logo {
+    background: #e8e8e8;
+}

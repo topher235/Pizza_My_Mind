@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_list.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="logo">
+        <img src="{% static 'master/images/pizzamymindlogo.png' %}" class="img-fluid">
+    </div>
+    <br>
+
+    <h1>ALL THURSDAYS</h1>
+    {% if all_thursdays %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th><h2>Dates</h2></th>
+                <th><h2>Company</h2></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for day in all_thursdays %}
+                <tr>
+                    <td>{{ day.date }}</td>
+                    <td>
+                        <!--Adding the pk as a parameter here redirects to the correct detail page-->
+                        <!--If you take a look at the url for the detail view, there is a "pk" parameter.
+                            This is the parameter-->
+                        <a href="{% url 'thursdays:thursday-detail' pk=day.pk %}">BOOKED</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text">No Pizza My Mind Dates</p>
+    {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

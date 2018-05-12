@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_list.css' %}">
+{% endblock %}
+
+{% block navbar_links %}
+    {% if thursday_list %}
+        <li class="nav-item"><a href="{% url 'thursdays:thursday-register' %}" class="nav-link">Sign up</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <p id="egggif" style="visibility: hidden;">HERE I AM</p>
+    <div class="logo">
+        <img src="{% static 'master/images/pizzamymindlogo.png' %}" class="img-fluid">
+    </div>
+    <br>
+    <p>If available, please register for the below Pizza My Mind dates.</p>
+    {% if thursday_list %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th><h2>Dates</h2></th>
+                <th><h2>Company</h2></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for day in thursday_list %}
+                {% if day.is_currently_available %}
+                    <tr id="tuesday">
+                        <td>{{ day.date }}</td>
+                        {% if day.assigned_company %}
+                            {% if day.assigned_company.is_registered %}
+                                <td>
+                                    <!--Adding the pk as a parameter here redirects to the correct detail page-->
+                                    <!--If you take a look at the url for the detail view, there is a "pk" parameter.
+                                        This is the parameter-->
+                                    <a href="{% url 'thursdays:thursday-detail' pk=day.pk %}">{{ day.assigned_company.name }}</a>
+                                </td>
+                            {% else %}
+                                <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a></td>
+                            {% endif %}
+                        {% else %}
+                            <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a></td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text">No Pizza My Mind Dates!</p>
+    {% endif %}
+
+    <br>
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            {% if thursday_list %}
+                <div>
+                    {# <a methods="POST" class="btn btn-primary" href="{% url 'thursdays:archive' %}">Archive</a> #}
+                    <form method="POST" action="{% url 'thursdays:archive' %}">
+                        {% csrf_token %}
+                        <input name="archive" type="submit" class="btn btn-primary" value="ARCHIVE"
+                               onclick="return confirm('The Archive button was activated. Are you sure you want to ' +
+                                'archive the Pizza My Mind dates for this year?')"/>
+                    </form>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <br>
+    <button class="btn btn-primary" onclick="goToPreviousDates()">Previous Pizza My Mind Dates</button>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function goToPreviousDates() {
+            window.location = "{% url 'thursdays:all-thursdays' %}";
+        }
+    </script>
+{% endblock %}

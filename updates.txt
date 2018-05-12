@@ -1,0 +1,152 @@
+  DATE         AUTHOR         WHAT WAS UPDATED?
+-----------------------------------------------
+1) March 2     Chris        Created the Company model in thursdays/models.py
+                            Created the register form in thursdays/forms.py
+                            Tested the model/form in thursdays/urls.py & thursdays/views.py
+
+2) March 3     Austin       Altered base.html and changed alert alert-danger to alert alert-success
+                            Added new mymindpizza email credentials to settings.py
+                            Registered Company model in thursdays/admin.py
+                            Added is_registered boolean to thursdays/models.py.Company
+                            Created __str__ definition and began class Meta for Company model
+                            Added activation and deactivation urls to thursdays/urls.py
+                            Defined ThursdayCreateView in thursdays/views.py
+                                - This class assigns the company to their requested date, but does not display the
+                                  date as "BOOKED" until the activation link is selected in the email sent to the host.
+                                  If the deactivation link is selected, the users information, excluding media, is de-
+                                  leted from the database
+                                - Added the respective activation and deactivation methods, will document source later
+                            Altered thursday_list.html to check for a true is_registered boolean
+                            Altered thursday/models.py so both models have Foreign Keys
+                            Altered views to correctly adjust the assigned companies and pmm_dates
+                            Added functionality for confirmation/denial emails
+                            Added functionality so when the host confirms one PMM registration, all other companies who
+                                requested to register for that date are emailed that they were denied.
+                            Began documentation.
+
+3) March 4     Austin       Added scheduled boolean field to Thursday model and adjusted the views.py file accordingly.
+                            Added more email functionality to activate method in thursday/views.py
+
+4) March 6     Chris        Added the base logic for the detail page.
+                            Updated the thursday_list.html page so that the "booked" dates are now forms that redirect
+                                to the detail page. This was the only way I thought of when I thought about how to send
+                                which date is being requested.
+                            Added thursday_detail to views.py which gets the date from the request (slices the string)
+                                Gets the correct Thursday object and the Company object associated with that Thursday
+                            Added the Thursday/Company variables to thursday_detail.html to test if the data was being
+                                shown correctly. Will beautify it later.
+                            Added the thursday_detail url to urls.py
+                            Added myself as an Admin and created Panera and March 6, 2018 in the DB so I could test that
+                                stuff was working
+                            Moved the particles.js file from thursday_list.html to base.html, this could be reversed if
+                                particles are only desired on the list page and not every page on the site. Also, that
+                                was all I did, so the content is not set up correctly.
+
+5) March 9     Chris        Edited the front end on base.html so that the content would be inside of the particles
+                            Edited the form display on thursday_form.html
+                            There is a problem when the user makes a smaller window - the information overflows vertically
+                                Not a quick fix, so I will look into it more later...
+
+6) March 15th  Austin       Added email functionality to the deactivate method to account for a company being completely
+                            denied
+
+7) March 18th  Chris        Edited the front end on base.html, thursday_detail.html, and thursday_form.html
+                            The detail page is closer to a finished product, but still needs design work.
+                            Cleaned up the css on each page where it was messy.
+                            Still need to fix the form page problem when the viewport is small
+
+8) March 24th Austin        Began doing research for styling the Admin page. Within the project templates folder I
+                            created an admin folder. If you go into the django docs on github,
+                            https://github.com/django/django/tree/master/django/contrib/admin/templates/admin ,
+                            we can copy the file names to override them within our project. For example,
+                            I added a base_site.html file and simply changed the Login Header to "Pizza My Mind" so now
+                            whenever we sign into the admin page it shows Pizza My Mind on the login box.
+                            Now we can just keep taking the pre-built django files and alter them to make the site look
+                            pretty. Video i used as reference: https://www.youtube.com/watch?v=dZxEA6Hwr4A&t=355s
+
+9) March 24th Chris         Fixed the footer issue. It now stays at the bottom of the page regardless of the amount of
+                            content. Began work on the form's css, but the footer took up a lot of my time. Will continue
+                            work on the form later. Made changes to forms.py because I plan on moving away from the
+                            bootstrap tags and using bootstrap classes and my own css
+
+10) March 25th Chris        Design on the form is complete. Now it is centered and responsive and shtuff. There are labels
+                            for all of the inputs. There are asterisks next to the required fields. If other fields are
+                            required then asterisks can be added to those. The description label might need to be changed
+                            to the questions that Claire wants. Edited base.html and other html files to make it cleaner,
+                            e.g. put the <section> tag in base.html to remove it from all the children css files and have
+                            it in one place. Added a rough "about" page.
+
+11) March 27th Austin       Added a field to the Thursday model labeled "is_currently_available." This field will be
+                            default set to True when a Thursday object is created and then whenever the Archive button
+                            (still have to make this) is hit, all of the dates who are currently available have this
+                            field set to False. The ListView will only display Thursdays who have this field as True.
+
+12) April 3rd Austin        Changed the URL for the admin site to CURRENT_ADMIN_SITE, we can eventually change this to
+                            some encrypted text and give it to Claire after deployment. Did some work with editing the
+                            front end for the admin site. Added a module called 'django-admin-honeypot' that can load
+                            a fake Admin Login Screen to the old admin/ URL.
+
+                            UPDATE: it works. I had to go into the files and edit some imports because some are outdated,
+                            but this module will load a dummy page on the old /admin page and if anyone attempts to login
+                            it will email the admin, me in this case, and display their entered username, IP address,
+                            timestamp, and then it displays a link that can also show us the type of device they used to
+                            attempt a login.
+
+                            Added the fake honeypot URL to the master urls.py file
+
+13) April 5th Austin/Chris  Decided to stop editing the admin page and found out how to verify the person on the site
+                            by the is_superuser tag. Because the Admins are the only ones who are technically "users",
+                            we can allow specific functionality based on this variable. We added a dummy button to the
+                            listview to showcase that it works. When we sign out of the admin page, effectively signing
+                            our admin out of the site, the button disappears.
+
+14) April 6th Austin        Archive button is functional. I added a form into the listview that only superusers can see.
+                            It sends a POST request to the archive method in the views.py file and iterates through
+                            any Thursday model objects that are 'currently_available' and sets this value to False.
+                            This then takes it off the homepage. It also uses an iterator so it can query faster.
+
+15) April 10th              Updating the Thursdays is now functional. I added another form specifically for updating so
+                            we can grab the data from the kwargs easier. There is also a page so we can view all of the
+                            thursdays that have ever been entered. The update view also has functionality so if the
+                            admin goes in and clears the name of the company appearing, the PMM date is now available.
+                            This displays correctly on the screen. Added a pop up confirmation box to the archive button
+                            so admins cannot accidentally archive current dates. Should we add a function for reverting?
+
+16) Austin                  added environment variables to manage.py file
+
+17) April 13th Chris        Fixed navbar and added pizza my mind pizza logo to the navbar_brand. Changed the base.html
+                            navbar links to be more concise. Put "sign up" link in thursday_list, can be put back in
+                            base.html if it should be visible from the about page or such. "Sign up" link in navbar
+                            only shows up if there are thursdays to sign up for.
+
+18) April 13th Austin       updated the about view to be a CBV. Just for extra security I added a LoginRequiredMixin
+                            and decorator to any views Clare uses to assure people cannot accidentally stumble upon them.
+
+19) April 15th Austin       Made the Archive CBV, have not tested or hooked it up, but its there
+
+20) April 17th Austin       When hovering over PMM dates on the homepage they change colors, we can change the color to
+                            and add any effects we decide on
+
+21) April 20th Chris        Created the create thursdays template, view, and form. Currently it adds one day to the db at
+                            a time. The front end has functionality to dynamically add and remove text input fields. I found
+                            a website/tutorial for forms with a variable amount of fields so I will focus on making that
+                            functionality work tomorrow. Currently the dates need to be typed in the 'yyyy-mm-dd'. We can
+                            change this in the future if a different form is required.
+
+22) April 21st Chris        Create Thursdays page now handles a dynamic number of form inputs. __init__ was overwritten to
+                            handle the extra dates dynamically. Moved pmm image above the table on thursday_list. Created
+                            skeleton page for contact_us. We need to design it / decide exactly what to put on it. Fixed
+                            toolbar issue on detail page. Little bit of redesign on there as well. Moved previous dates link
+                            to thursday_list instead of base page.
+
+23) April 21st Austin       Fixed the listing page so it displays the company names instead of BOOKED. Added a required
+                            checkbox to the form page for registration that must be checked in order to proceed with
+                            registration.
+
+24) April 30th Chris        Added image and information to About page. UI fix to create thursdays form. Added line 135 to
+                            the views file so html can be used for emails. If that works then we can use it for the confirm
+                            and deny emails.
+
+25) May 2nd Austin          Added functionality so if the superusers submit the form to schedule a thursday it
+                            automatically registers the entered company. This will be the way PCSE can manually add
+                            companies into the system.

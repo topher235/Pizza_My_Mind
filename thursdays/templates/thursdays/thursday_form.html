@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{% static 'master/css/thursday_form.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        #form_checkbox {
+            font-size: smaller;
+        }
+    </style>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <br>
+        <form id="form" name="form" method="POST" enctype="multipart/form-data" action="{% url 'thursdays:thursday-register' %}">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputName">Company Name<span class="required">*</span></label>
+                    {{ thursday_form.name }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputDate">Select Date<span class="required">*</span></label>
+                    {{ thursday_form.pmm_date }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputEmailOne">Email One<span class="required">*</span></label>
+                    {{ thursday_form.email_one }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmailTwo">Email Two</label>
+                    {{ thursday_form.email_two }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputWebsite">Website</label>
+                    {{ thursday_form.website }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputFacebook">Facebook</label>
+                    {{ thursday_form.facebook }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputDescription">Description<span class="required">*</span></label>
+                    {{ thursday_form.description }}
+                </div>
+            </div>
+
+            <div class="item">
+                <input type="checkbox" id="form_validation" required>
+                <label id="form_checkbox" for="form_validation"><span class="required">By clicking submit, you agree to pay the required
+                    fee if you are approved.</span></label>
+            </div>
+            <button class="btn btn-primary" type="submit">Register
+            </button>
+        </form>
+    </div>
+    <script>
+
+    </script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'master/js/thursday_form.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% load staticfiles %}
+{% autoescape off %}
+    {{ user.name }} would like to reserve PMM on {{ thursday.date }},
+
+    Please click on the link to confirm registration,
+    http://{{ domain }}{% url 'thursdays:confirm' uidb64=uid token=token pk=scheduled_pk %}
+
+    Deny:
+    http://{{ domain }}{% url 'thursdays:deny' uidb64=uid token=token %}
+{% endautoescape %}

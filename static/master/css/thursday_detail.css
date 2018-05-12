@@ -1,0 +1,21 @@
+.card-content {
+    padding: 20px;
+}
+
+.header {
+    color: black;
+    font-weight: bold;
+}
+
+.text {
+    color: black;
+}
+
+.update-text {
+    color: black;
+    font-weight: bold;
+}
+
+.update-button {
+    margin-top: 10px;
+}

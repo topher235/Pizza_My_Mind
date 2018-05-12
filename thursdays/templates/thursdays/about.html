@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'master/css/about.css' %}">
+{% endblock %}
+
+{% block content%}
+        <h1>ABOUT</h1>
+        <br>
+        <div class="img">
+        <img src="{% static 'master/images/pmm_flyer.PNG' %}" class="flyer"/>
+        </div>
+        <div>
+            <p class="about">Hosted by the Department of Physics, Computer Science and Engineering
+            at Christopher Newport University, Pizza My Mind gives you the chance
+            to showcase career and internship opportunities to exceptional students
+            majoring in related fields.</p>
+            <p class="about">This initiative has grown into a major success with recruiters and
+            students alike. Employers typically conduct a 10-to-15 minute presentation,
+            providing time for questions and answers. To assist you, technical support
+            is provided for MS PowerPoint, Web access, etc.</p>
+        </div>
+
+        <hr>
+        <div>
+            <h3 class="about">When:</h3>
+            <p class="about">Thursdays, 12:20-1:15 p.m., during fall and spring semesters</p>
+            <h3 class="about">Where:</h3>
+            <p class="about">Luter Hall 121 &#9679; Christopher Newport University <br>
+            1 Avenue of the Arts &#9679; Newport News, VA 23606</p>
+            <h3 class="about">Typical Majors of Students:</h3>
+            <p class="about">Computer engineering, computer science, information science,
+                information systems, electrical engineering, applied physics</p>
+            <h3 class="about">Attendance:</h3>
+            <p class="about">Approximately 85-140 students</p>
+        </div>
+
+        <hr>
+        <div>
+            <h3 class="about">Seminar Registration Fee:</h3>
+            <p class="about">$200, which includes cost of pizza, drinks and paper/plastic ware</p>
+            <h3 class="about">Past Presenters and Hiring Companies</h3>
+            <div class="row">
+                <div class="col">
+                    <ul class="about">
+                        <li class="about">AMSEC</li>
+                        <li class="about">Booz Allen Hamilton</li>
+                        <li class="about">Canon Virginia Inc.</li>
+                        <li class="about">CIRCADENCE</li>
+                        <li class="about">Epic</li>
+                        <li class="about">Federal Reserve Board</li>
+                        <li class="about">idTech</li>
+                        <li class="about">Lockheed Martin</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <ul class="about">
+                        <li class="about">MITRE Corporation</li>
+                        <li class="about">NASA</li>
+                        <li class="about">Newport News Shipbuilding</li>
+                        <li class="about">RedHat</li>
+                        <li class="about">Riverside Health Systems</li>
+                        <li class="about">UNOS</li>
+                        <li class="about">Swisslog</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div>
+            <p>For additional information, contact Clare Maliniak at
+                <b>clarem@cnu.edu</b> or <b>(757) 594-7065</b>.</p>
+{% endblock %}
