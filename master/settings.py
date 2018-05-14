@@ -24,7 +24,7 @@ SECRET_KEY = '1-00%ic#7@%4etp_w6p$+_^wlvqfk3jh)ouc4c)9r23hm&hz7v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pmm.pcs.cnu.edu']
+ALLOWED_HOSTS = ['pmm.pcs.cnu.edu', 'localhost']
 
 # Application definition
 
