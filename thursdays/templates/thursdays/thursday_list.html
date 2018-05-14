@@ -20,7 +20,7 @@
         <img src="{% static 'master/images/pizzamymindlogo.png' %}" class="img-fluid">
     </div>
     <br>
-    <p>If available, please register for the below Pizza My Mind dates.</p>
+    <p class="hide_or_not_to_hide">If available, please register for the below Pizza My Mind dates.</p>
     {% if thursday_list %}
         <table class="table table-bordered">
             <thead>
@@ -43,7 +43,8 @@
                                     <a href="{% url 'thursdays:thursday-detail' pk=day.pk %}">{{ day.assigned_company.name }}</a>
                                 </td>
                             {% else %}
-                                <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a></td>
+                                <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a>
+                                </td>
                             {% endif %}
                         {% else %}
                             <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a></td>
@@ -56,20 +57,18 @@
     {% else %}
         <p class="text">No Pizza My Mind Dates!</p>
     {% endif %}
-
     <br>
     {% if user.is_authenticated %}
         {% if user.is_superuser %}
             {% if thursday_list %}
                 <div>
-                    {# <a methods="POST" class="btn btn-primary" href="{% url 'thursdays:archive' %}">Archive</a> #}
-                    <form method="POST" action="{% url 'thursdays:archive' %}">
+                    <form method="GET" id="ARCHIVE_FORM">
                         {% csrf_token %}
-                        <input name="archive" type="submit" class="btn btn-primary" value="ARCHIVE"
-                               onclick="return confirm('The Archive button was activated. Are you sure you want to ' +
-                                'archive the Pizza My Mind dates for this year?')"/>
+                        <input id="archive_input" name="archive" type="submit" class="btn btn-success"
+                               value="ARCHIVE"/>
                     </form>
                 </div>
+                <div id="archive-msg"></div>
             {% endif %}
         {% endif %}
     {% endif %}
@@ -82,5 +81,27 @@
         function goToPreviousDates() {
             window.location = "{% url 'thursdays:all-thursdays' %}";
         }
+
+        $(document).ready(function () {
+            $("#ARCHIVE_FORM").on('submit', function (e) {
+                if (confirm("The Archive Button was activated. This will archive any PMM dates from the previous year. " +
+                        "Are you sure?")) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'thursdays:archive' %}',
+                        dataType: 'json', // what i am expecting back from the server,
+                        data: {},
+                        success: [function (data) {
+                            $('.everything').html('').load("{% url 'thursdays:homepage' %}");
+                            alert(data.response_message);
+                        }]
+                    });
+                } else {
+                    return;
+                }
+            });
+        });
+
     </script>
 {% endblock %}
