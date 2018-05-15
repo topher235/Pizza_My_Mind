@@ -15,3 +15,4 @@ Steps for resetting server with the current git repo in case it resets again:
   b. check remote url
 6. fetch --all
 7. reset --hard origin/master
+---Also check the apache server config files to make sure the server is finding the django application
