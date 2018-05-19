@@ -152,11 +152,10 @@ class ThursdayCreateView(CreateView):
                         'token': account_activation_token.make_token(company_attempting_to_reserve),
                         'scheduled_pk': scheduled_date.pk
                     })
-                    to_email = 'raymond.sutton.15@cnu.edu' #os.environ["ADMIN_EMAIL"]
+                    to_email = os.environ["ADMIN_EMAIL"]
                     email = EmailMessage(
                         mail_subject, message, to=[to_email]
                     )
-                    #email.attach_alternative(message, "text/html")
                     email.send()
                     messages.success(request, 'Registration Is Awaiting Confirmation')
                 return redirect('/')
