@@ -27,6 +27,11 @@
             <tr>
                 <th><h2>Dates</h2></th>
                 <th><h2>Company</h2></th>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <th><h2>Delete</h2></th>
+                    {% endif %}
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -48,6 +53,12 @@
                             {% endif %}
                         {% else %}
                             <td><a href="{% url 'thursdays:bind' pk=day.pk %}">AVAILABLE FOR RESERVATION</a></td>
+                        {% endif %}
+                        <!-- Viewable by admin: delete thursday -->
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                                <td><a href="{% url 'thursdays:delete_thursday' pk=day.pk %}" class="btn btn-danger" onclick="return confirm('Are you sure?')">DELETE</button></td>
+                            {% endif %}
                         {% endif %}
                     </tr>
                 {% endif %}
