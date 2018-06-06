@@ -13,10 +13,12 @@ urlpatterns = [
         views.activate, name='confirm'),
     url(r'^deactivate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.deactivate, name='deny'),
-    url(r'^archived_current_pizza_my_mind_dates/', views.ArchiveView.as_view(), name='archive'),
+    url(r'^ajax/archived_current_pizza_my_mind_dates/', views.ArchiveView.as_view(), name='archive'),
     url(r'^update/(?P<pk>\d+)/$', views.ThursdayUpdateView.as_view(), name='thursday-update'),
     url(r'^all_thursdays/', views.PreviousPizzaMyMindListView.as_view(), name='all-thursdays'),
     url(r'^bind_form/(?P<pk>\d+)/$', views.bound_form, name='bind'),
     url(r'^create_thursdays/', views.create_thursdays, name='create_thursdays'),
     url(r'^contact_us/', views.ContactUsView.as_view(), name='contact_us'),
+    url(r'^clear_thursday_data/(?P<pk>\d+)/$', views.ThursdayClearData.as_view(), name='thursday-clear-data'),
+    url(r'^delete_thursday/(?P<pk>\d+)/$', views.delete_thursday, name='delete_thursday'),
 ]
