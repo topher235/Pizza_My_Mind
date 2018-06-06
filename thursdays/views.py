@@ -1,6 +1,6 @@
 import os
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .forms import *
 from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
@@ -17,6 +17,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # ##############################################CLASS BASED VIEWS######################################################
+class ThursdayClearData(LoginRequiredMixin, View):
+    homepage = '/'
+
+    def post(self, request, pk):
+        thursday_obj = Thursday.objects.get(id=pk)
+        if request.method == 'POST':
+            company = thursday_obj.assigned_company
+            company.is_registered = False
+            company.save()
+
+            thursday_obj.assigned_company = None
+            thursday_obj.scheduled = False
+            thursday_obj.save()
+            return redirect(self.homepage)
+
+
 class ThursdayUpdateView(LoginRequiredMixin, UpdateView):
     model = Thursday
     template_name = 'thursdays/thursday_update.html'
@@ -45,19 +61,21 @@ class ThursdayUpdateView(LoginRequiredMixin, UpdateView):
                 thursday = form.save(commit=False)
 
                 company = thursday.assigned_company
+
+                new_thursday = form.cleaned_data['pmm_date']
+                new_thursday.assigned_company = company
+                new_thursday.save()
+
                 company.website = form.cleaned_data['website']
                 company.facebook = form.cleaned_data['facebook']
                 company.description = form.cleaned_data['description']
                 company.email_one = form.cleaned_data['email_one']
                 company.email_two = form.cleaned_data['email_two']
+                company.pmm_date = new_thursday
                 company.save()
 
-                if form.cleaned_data['name'] is None or form.cleaned_data['name'] == '':
-                    thursday.assigned_company = None
-                    thursday.scheduled = False
-                    company.is_registered = False
-                    company.save()
-
+                thursday.assigned_company = None
+                thursday.scheduled = False
                 thursday.save()
                 return redirect('/')
         else:
@@ -156,6 +174,7 @@ class ThursdayCreateView(CreateView):
                     email = EmailMessage(
                         mail_subject, message, to=[to_email]
                     )
+                    # email.attach_alternative(message, "text/html")
                     email.send()
                     messages.success(request, 'Registration Is Awaiting Confirmation')
                 return redirect('/')
@@ -197,18 +216,30 @@ class ContactUsView(View):
 class ArchiveView(LoginRequiredMixin, View):
     template_name = '/'  # homepage
 
-    def post(self, request):
+    def get(self, request):
         """
         archive method that sends all of the current PMM dates from the year into the 'archived folder'
         :param request: POST method from HTML
         :return: a redirect to the homepage
         """
-        if request.method == 'POST':
+        if request.method == 'GET':
             thursday_list = Thursday.objects.filter(is_currently_available=True)
             for thursday in thursday_list.iterator():
                 thursday.is_currently_available = False
                 thursday.save()
-        return redirect(self.template_name)
+
+            if Thursday.objects.filter(is_currently_available=True).exists():
+                print('GOT HERE')
+                response = "An error occurred, please try again."
+            else:
+                response = "Dates archived."
+
+            data = {
+                'thursday_list': list(thursday_list),
+                'response_message': response,
+                'template_page': self.template_name
+            }
+            return JsonResponse(data)
 
 
 # ##############################################END CLASS BASED VIEWS##################################################
@@ -328,13 +359,20 @@ def bound_form(request, pk):
     form = ThursdayForm(initial={'pmm_date': item})
     return render(request, 'thursdays/thursday_form.html', {'thursday_form': form})
 
+def delete_thursday(request, pk):
+    """
+    Delete a thursday object from the db.
+    """
+    item = Thursday.objects.get(id=pk)
+    item.delete()
+    return redirect('thursdays:homepage')
 
 # Gets the extra dates from the front-end
 def get_extra_dates(request):
-    num_extra_days = request.POST.get('num_extra_days')
+    num_extra_days = request.POST.get('num_extra_days', )
     days = []
     for i in range(int(num_extra_days)):
-        days.append(request.POST.get('date_' + str(i)))
+        days.append(request.POST.get('date_' + str(i), ))
 
     return days
 
