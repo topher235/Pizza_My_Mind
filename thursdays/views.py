@@ -422,7 +422,7 @@ def create_thursdays(request):
 
 
 def invoice(request, uidb64, token, pk):
-    template_name = 'thursdays/INVOICE.html'
+    template_name = 'thursdays/invoice.html'
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         approved_company = Company.objects.get(pk=uid)

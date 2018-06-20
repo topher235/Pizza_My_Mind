@@ -33,7 +33,7 @@ class Company(models.Model):
     # https://docs.djangoproject.com/en/2.0/topics/files/
     # https://docs.djangoproject.com/en/2.0/ref/models/fields/#django.db.models.FileField
     # https://docs.djangoproject.com/en/2.0/topics/http/file-uploads/
-    name = models.CharField(max_length=50, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
     website = models.URLField(null=True, blank=True)
     facebook = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
