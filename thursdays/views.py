@@ -1,6 +1,8 @@
 import os
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
+
+from master.utils import render_to_pdf
 from .forms import *
 from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
@@ -10,9 +12,6 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, View
-from datetime import datetime, timedelta
-from django.shortcuts import render_to_response
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -66,6 +65,7 @@ class ThursdayUpdateView(LoginRequiredMixin, UpdateView):
                 new_thursday.assigned_company = company
                 new_thursday.save()
 
+                company.name = form.cleaned_data['name']
                 company.website = form.cleaned_data['website']
                 company.facebook = form.cleaned_data['facebook']
                 company.description = form.cleaned_data['description']
@@ -74,8 +74,8 @@ class ThursdayUpdateView(LoginRequiredMixin, UpdateView):
                 company.pmm_date = new_thursday
                 company.save()
 
-                thursday.assigned_company = None
-                thursday.scheduled = False
+                thursday.assigned_company = company
+                thursday.scheduled = True
                 thursday.save()
                 return redirect('/')
         else:
@@ -149,7 +149,10 @@ class ThursdayCreateView(CreateView):
                     message = render_to_string('thursdays/approved_visit.html', {
                         'user': company_attempting_to_reserve.name,
                         'domain': current_site.domain,
-                        'date': scheduled_date
+                        'date': scheduled_date,
+                        'uid': urlsafe_base64_encode(force_bytes(company_attempting_to_reserve.pk)).decode(),
+                        'token': account_activation_token.make_token(company_attempting_to_reserve),
+                        'scheduled_pk': scheduled_date.pk
                     })
                     if company_attempting_to_reserve.email_two:
                         email = EmailMessage(mail_subject, message,
@@ -229,7 +232,6 @@ class ArchiveView(LoginRequiredMixin, View):
                 thursday.save()
 
             if Thursday.objects.filter(is_currently_available=True).exists():
-                print('GOT HERE')
                 response = "An error occurred, please try again."
             else:
                 response = "Dates archived."
@@ -279,7 +281,10 @@ def activate(request, uidb64, token, pk):
         message = render_to_string('thursdays/approved_visit.html', {
             'user': approved_company.name,
             'domain': current_site.domain,
-            'date': pmm_date
+            'date': pmm_date,
+            'uid': urlsafe_base64_encode(force_bytes(approved_company.pk)).decode(),
+            'token': account_activation_token.make_token(approved_company),
+            'scheduled_pk': pmm_date.pk
         })
         if approved_company.email_two:
             email = EmailMessage(mail_subject, message, to=[approved_company.email_one, approved_company.email_two])
@@ -359,13 +364,16 @@ def bound_form(request, pk):
     form = ThursdayForm(initial={'pmm_date': item})
     return render(request, 'thursdays/thursday_form.html', {'thursday_form': form})
 
+
 def delete_thursday(request, pk):
     """
     Delete a thursday object from the db.
     """
-    item = Thursday.objects.get(id=pk)
-    item.delete()
+    if request.method == 'GET':
+        item = Thursday.objects.get(id=pk)
+        item.delete()
     return redirect('thursdays:homepage')
+
 
 # Gets the extra dates from the front-end
 def get_extra_dates(request):
@@ -411,3 +419,29 @@ def create_thursdays(request):
     else:
         context['form'] = CreateThursdayForm()
     return render(request, 'thursdays/create_thursdays.html', context)
+
+
+def invoice(request, uidb64, token, pk):
+    template_name = 'thursdays/INVOICE.html'
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        approved_company = Company.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, Company.DoesNotExist):
+        approved_company = None
+
+    if approved_company is not None and account_activation_token.check_token(approved_company, token):
+        pmm_date = Thursday.objects.get(pk=pk)
+        context = {
+            'organization': approved_company.name,
+            'seminar_date': pmm_date.date,
+            'registration_amount': '$250',
+        }
+        pdf = render_to_pdf(template_name, context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "invoice_{}.pdf".format(context['organization'])
+            content = "inline; filename={}".format(filename)
+
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse('Not Found')

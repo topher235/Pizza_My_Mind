@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^contact_us/', views.ContactUsView.as_view(), name='contact_us'),
     url(r'^clear_thursday_data/(?P<pk>\d+)/$', views.ThursdayClearData.as_view(), name='thursday-clear-data'),
     url(r'^delete_thursday/(?P<pk>\d+)/$', views.delete_thursday, name='delete_thursday'),
+    url(r'^invoice/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/(?P<pk>\d+)/$',
+        views.invoice, name='invoice')
 ]

@@ -2,4 +2,6 @@
     Hi {{ user }},
 
     Your Pizza My Mind visit for {{ date }} has been APPROVED.
+    Please visit the link provided to access your invoice.
+    http://{{ domain }}{% url 'thursdays:invoice' uidb64=uid token=token pk=scheduled_pk %}
 {% endautoescape %}
